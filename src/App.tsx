@@ -2,18 +2,20 @@ import { Button as BaseButton, Text as BaseText } from "./component";
 import { Main, Row, Section } from "./layout";
 import { InferStoreState, createStore } from "./store";
 
-const countStore = createStore({ count_1: 0, count_2: 1 });
+const countStore = createStore({ count_1: 0, count_2: 4 });
 
 const Button = (
   props: React.ComponentProps<typeof BaseButton> & {
     stateKey: StoreStateKey;
   }
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { stateKey, onClick, ...tail } = props;
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // noop
+    countStore.setState((state) => ({
+      ...state,
+      [stateKey]: state[stateKey] + 1,
+    }));
 
     onClick?.(e);
   };
@@ -26,10 +28,9 @@ const Text = (
     stateKey: StoreStateKey;
   }
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { stateKey, ...tail } = props;
 
-  const value = 0;
+  const value = countStore.getState()[stateKey];
 
   return <BaseText {...tail}>{value}</BaseText>;
 };

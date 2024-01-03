@@ -3,8 +3,8 @@ export function createStore<T>(initialState: T) {
 
   return {
     getState: () => state,
-    setState: (newState: T) => {
-      state = newState;
+    setState: (func: (prevState: T) => T) => {
+      state = func(state);
     },
   };
 }
