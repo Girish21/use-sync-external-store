@@ -30,9 +30,9 @@ const Text = (
 ) => {
   const { stateKey, ...tail } = props;
 
-  const value = countStore.getState()[stateKey];
+  const value = countStore.useStore();
 
-  return <BaseText {...tail}>{value}</BaseText>;
+  return <BaseText {...tail}>{value[stateKey]}</BaseText>;
 };
 
 const App = () => {

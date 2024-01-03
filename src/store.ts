@@ -1,10 +1,31 @@
+import React from "react";
+
 export function createStore<T>(initialState: T) {
   let state = initialState;
+  const set = new Set<(state: T) => void>();
+
+  const subscribe = (func: (state: T) => void) => {
+    set.add(func);
+
+    return () => {
+      set.delete(func);
+    };
+  };
 
   return {
     getState: () => state,
     setState: (func: (prevState: T) => T) => {
       state = func(state);
+      set.forEach((func) => func(state));
+    },
+    useStore: () => {
+      const [storeState, setStoreState] = React.useState(() => state);
+
+      React.useEffect(() => {
+        return subscribe(setStoreState);
+      }, []);
+
+      return storeState;
     },
   };
 }
