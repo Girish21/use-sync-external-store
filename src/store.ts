@@ -19,13 +19,7 @@ export function createStore<T>(initialState: T) {
       set.forEach((func) => func(state));
     },
     useStore: <U>(selector: (state: T) => U) => {
-      const [storeState, setStoreState] = React.useState(() => selector(state));
-
-      React.useEffect(() => {
-        return subscribe((state) => setStoreState(selector(state)));
-      }, [selector]);
-
-      return storeState;
+      return React.useSyncExternalStore(subscribe, () => selector(state));
     },
   };
 }
