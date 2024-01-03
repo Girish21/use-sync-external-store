@@ -18,12 +18,12 @@ export function createStore<T>(initialState: T) {
       state = func(state);
       set.forEach((func) => func(state));
     },
-    useStore: () => {
-      const [storeState, setStoreState] = React.useState(() => state);
+    useStore: <U>(selector: (state: T) => U) => {
+      const [storeState, setStoreState] = React.useState(() => selector(state));
 
       React.useEffect(() => {
-        return subscribe(setStoreState);
-      }, []);
+        return subscribe((state) => setStoreState(selector(state)));
+      }, [selector]);
 
       return storeState;
     },
